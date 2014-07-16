@@ -1,11 +1,22 @@
 $(document).ready(function () {
+    var codeMirror = CodeMirror.fromTextArea($("#codemirror-textbox")[0],{
+        mode:  "javascript",
+        theme: "glass",
+        lineNumbers: true,
+        indentUnit: 4,
+        value: "function init() {\n\treturn \"DEAD\"\n}\nfunction run(state) {\n\treturn state + 1;\n}"
+    });
+
     var canvas = $("#main-canvas")[0];
     var context = canvas.getContext("2d");
 
-    var width = canvas.width;
-    var height = canvas.height;
+    context.canvas.width = $("#main-canvas").width();
+    context.canvas.height = $("#main-canvas").height();
 
-    grid = new Grid(width,height,3);
+    var width = context.canvas.width;
+    var height = context.canvas.height;
+
+    grid = new Grid(width,height,10);
     var colorData = [];
     for (var x = 0; x < grid.gridWidth; x++) {
         colorData.push([]);
@@ -16,13 +27,13 @@ $(document).ready(function () {
     var lastMousePos;
 
     function getXY(event) {
-        return {x:event.clientX-canvas.offsetLeft-3, y:event.clientY-canvas.offsetTop+5};
+        return {x:event.clientX-canvas.offsetLeft-3, 
+                y:event.clientY-canvas.offsetTop+5};
     }
     var mouseDown = false;
     $(canvas).mousedown(function(event) {
         mouseDown = true;
         lastMousePos = getXY(event);
-        console.log("mouse down " + event);
     });
     $("body").mousemove(function(mousemoveEvent) {
         if (mouseDown) {
@@ -32,13 +43,11 @@ $(document).ready(function () {
             });
             lastMousePos = getXY(mousemoveEvent);
         }
-        console.log("mouse move " + event);
     });
 
-    $(canvas).mouseup(function (event) {
+    $("body").mouseup(function (event) {
         mouseDown = false;
         lastMousePos = getXY(event);
-        console.log("mouse up " + event);
     });
 
     // makes the lines crisper

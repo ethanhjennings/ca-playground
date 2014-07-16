@@ -30,10 +30,10 @@ Grid.prototype.convertLineToGridPoints = function(startPoint,endPoint) {
     var resultArray = [];
 
     while(true){
-        var point ={x:x0, y:y0};
-        point.x = Math.min(this.gridWidth,Math.max(0,point.x));
-        point.y = Math.min(this.gridHeight,Math.max(0,point.y));
-        resultArray.push({x:point.x,y:point.y});
+        var point ={x:x0,y:y0};
+        if (point.x >= 0 && point.x < this.gridWidth &&
+            point.y >= 0 && point.y < this.gridHeight) 
+            resultArray.push(point);
 
         if ((x0==x1) && (y0==y1)) break;
         var e2 = 2*err;
