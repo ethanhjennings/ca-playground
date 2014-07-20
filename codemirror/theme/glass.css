@@ -1,0 +1,31 @@
+/* Based on Sublime Text's glass theme */
+
+.cm-s-glass.CodeMirror {background: rgba(0,0,0,0.0); color: #f8f8f2; border: 1px solid rgba(255,255,255,1.0);}
+.cm-s-glass div.CodeMirror-selected {background: rgba(255,255,255,0.2) !important;}
+.cm-s-glass .CodeMirror-gutters {background: rgba(255,255,255,0.0); border-right: 0px;}
+.cm-s-glass .CodeMirror-guttermarker { color: white; }
+.cm-s-glass .CodeMirror-guttermarker-subtle { color: #d0d0d0; }
+.cm-s-glass .CodeMirror-linenumber {color: #d0d0d0;}
+.cm-s-glass .CodeMirror-cursor {border-left: 1px solid #f8f8f0 !important;}
+
+.cm-s-glass span.cm-comment {color: #aaaaaa;}
+.cm-s-glass span.cm-atom {color: #ae81ff;}
+.cm-s-glass span.cm-number {color: rgba(255,255,255,1.0)}
+
+.cm-s-glass span.cm-property, .cm-s-glass span.cm-attribute {color: #a6e22e;}
+.cm-s-glass span.cm-keyword {color: rgba(255,255,200,1.0)}
+.cm-s-glass span.cm-string {color: #e6db74;}
+
+.cm-s-glass span.cm-variable {color: rgba(200,255,200,1.0);}
+.cm-s-glass span.cm-variable-2 {color: rgba(200,255,200,1.0);}
+.cm-s-glass span.cm-def {color: rgba(255,200,200,1.0);}
+.cm-s-glass span.cm-bracket {color: rgba(0,0,0,0.8);}
+.cm-s-glass span.cm-tag {color: #f92672;}
+.cm-s-glass span.cm-link {color: #ae81ff;}
+.cm-s-glass span.cm-error {background: #f92672; color: #f8f8f0;}
+
+.cm-s-glass .CodeMirror-activeline-background {background: #373831 !important;}
+.cm-s-glass .CodeMirror-matchingbracket {
+  text-decoration: underline;
+  color: white !important;
+}
