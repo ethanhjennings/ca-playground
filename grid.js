@@ -1,7 +1,7 @@
 function Grid(width,height,cellsize) {
 	this.cellSize = cellsize;
-	this.gridWidth = width/this.cellSize;
-    this.gridHeight = height/this.cellSize;
+	this.gridWidth = Math.floor(width/this.cellSize);
+    this.gridHeight = Math.floor(height/this.cellSize);
     this.width = width;
     this.height = height;
     this.decimalCellWidth = this.width/this.gridWidth;
@@ -69,9 +69,14 @@ Grid.prototype.draw = function(context,colorData) {
 
     for (var y = 0; y < this.gridHeight; y++) {
         for (var x = 0; x < this.gridWidth; x++) {
+            var xPos = Math.floor(x*this.decimalCellWidth);
+            var yPos = Math.floor(y*this.decimalCellHeight);
+            var cellWidth = Math.floor(this.decimalCellWidth);
+            var cellHeight = Math.floor(this.decimalCellHeight);
+
             context.strokeWidth = "0";
             context.fillStyle = colorData[x][y];
-            context.fillRect(x*this.cellSize-0.5,y*this.cellSize-0.5,this.cellSize+1.0,this.cellSize+1.0);
+            context.fillRect(xPos-0.5,yPos-0.5,cellWidth + 1.0,cellHeight + 1.0);
         }
     }
 };

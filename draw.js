@@ -1,10 +1,34 @@
+function timeStamp() {
+    return +(new Date());
+}
+
 $(document).ready(function () {
     var codeMirror = CodeMirror.fromTextArea($("#codemirror-textbox")[0],{
         mode:  "javascript",
         theme: "glass",
         lineNumbers: true,
-        indentUnit: 4,
-        value: "function init() {\n\treturn \"DEAD\"\n}\nfunction run(state) {\n\treturn state + 1;\n}"
+        indentUnit: 4
+    });
+
+    $('#ex1').slider();
+
+    var running = false;
+
+    $("#play-button").click(function () {
+
+        running = !running;
+
+        $("#play-icon").removeClass();
+        if (running) {
+            console.log("Running!");
+            $("#play-icon").addClass("glyphicon glyphicon-pause");
+            $("#run-text").text("Pause");
+        }
+        else {
+            console.log("Paused !");
+            $("#play-icon").addClass("glyphicon glyphicon-play");
+            $("#run-text").text("Run");
+        }
     });
 
     var canvas = $("#main-canvas")[0];
@@ -36,6 +60,7 @@ $(document).ready(function () {
         lastMousePos = getXY(event);
     });
     $("body").mousemove(function(mousemoveEvent) {
+        mousemoveEvent.originalEvent.preventDefault();
         if (mouseDown) {
             var newPoints = grid.convertLineToGridPoints(lastMousePos,getXY(mousemoveEvent));
             $.each(newPoints, function(i,point) {
@@ -88,34 +113,34 @@ $(document).ready(function () {
 
     counter = 0;
 
-    (function runLoop() {
-        window.requestAnimationFrame(runLoop);
-
-        if (counter >= 0) {
-            //for (var x = 0; x < grid.gridWidth; x++) {
-                //newColorData.push([]);
-            //    for (var y = 0; y < grid.gridHeight; y++) {
-            //        colorData[x][y] = (Math.random()>0.9 ? "white" : "rgba(0,0,0,0.0)");
-                    //var count = countNeighbors({x:x,y:y});
-                    //if (count == 3)
-                    //    newColorData[x].push("white");
-                    //else if (count < 2)
-                    //    newColorData[x].push("rgba(0,0,0,0.0)");
-                    //else if (count > 3)
-                    //    newColorData[x].push("rgba(0,0,0,0.0)");
-                    //else
-                    //    newColorData[x].push(colorData[x][y]);
-            //    }
-            //}
-            //colorData = newColorData;
-        }
-        if (counter >= 0) {
-            
-            context.clearRect(0,0,canvas.width,canvas.height);
-            grid.draw(context,colorData);
-            counter = 0;
-        }
-        counter++;
-
-    })();
+    runLoop();
 });
+
+
+
+function runLoop() {
+    window.requestAnimationFrame(runLoop);
+    if (running) {
+        for (var i = 0; i < 1; i++) {
+            newColorData = [];
+            for (var x = 0; x < grid.gridWidth; x++) {
+                newColorData.push([]);
+                for (var y = 0; y < grid.gridHeight; y++) {
+                    var count = countNeighbors({x:x,y:y});
+                    if (count == 3)
+                        newColorData[x].push("white");
+                    else if (count < 2)
+                        newColorData[x].push("rgba(0,0,0,0.0)");
+                    else if (count > 3)
+                        newColorData[x].push("rgba(0,0,0,0.0)");
+                    else
+                        newColorData[x].push(colorData[x][y]);
+                }
+            }
+            colorData = newColorData;
+        }
+    }          
+    context.clearRect(0,0,canvas.width,canvas.height);
+    grid.draw(context,colorData);
+    counter = 0;
+}

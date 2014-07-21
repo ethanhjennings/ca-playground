@@ -4,7 +4,8 @@
 <link rel="stylesheet" type="text/css" href="ca.css">
 <link rel="stylesheet" type="text/css" href="codemirror/theme/glass.css">
 <link rel="stylesheet" type="text/css" href="codemirror/lib/codemirror.css">
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="bootstrap-slider.css">
 
 <style>
 
@@ -43,30 +44,52 @@
 
 #play-button {
     width:150px;
-
 }
 
-.btn-outline-inverse {
-  color: #fff;
+.btn:focus,
+.btn:active,
+.btn:hover {
+  outline: 0;
+}
+
+.btn-outline-inverse,
+.btn-outline-inverse:focus {
+  outline: 0;
+  color: white;
   background-color: transparent;
   border-color: white;
 }
 .btn-outline-inverse:hover,
-.btn-outline-inverse:focus,
-.btn-outline-inverse:active {
+.btn-outline-inverse:active
+
+ {
+  outline:0;
   color: #3db9d8;
   text-shadow: none;
-  background-color: #fff;
-  border-color: #fff;
+  background-color: white;
+  border-color: white;
 }
 
+.slider-track {
+    background: transparent;
+    border: 1px solid white;
+}
 
+.slider-selection {
+    background: transparent;
+    border: 0px;
+}
 
+.slider-handle {
+    background: white;
+    border: 0px;
+    color: white;
+}
 </style>
-
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="bootstrap-slider.js"></script>
 <script src="codemirror/lib/codemirror.js"></script>
 <script src="codemirror/mode/javascript/javascript.js"></script>
 <script src="codemirror/addon/selection/active-line.js"></script>
@@ -79,24 +102,32 @@
 <div id="center-div">
 <canvas id="main-canvas"></canvas>
 <textarea id="codemirror-textbox">
-function init() {
-    // returns the initial state for a cell
-    return 0;
-}
+init = 0;
 
-function run(state,neighbors) {
-    // returns a new state a cell based on neighbors
+run = function(state,neighbors) {
     return state;
-}
+};
 
-function color(state) {
-    // returns a color for the cell based on state
+color = function(state) {
     return (state == 1 ? "white" : rbga(0,0,0,0) );
-}
+};
 </textarea>
-<button type="button" class="btn btn-outline-inverse btn-lg" id="play-button">
-<span id="run-text">Run</span> <span class="glyphicon glyphicon-play" id="play-icon"></span>
+<button type="button" class="btn btn-outline-inverse btn-lg" id="plus-button">
+<span class="glyphicon glyphicon-plus"></span>
 </button>
+<button type="button" class="btn btn-outline-inverse btn-lg" id="minus-button">
+<span class="glyphicon glyphicon-minus"></span>
+</button>
+
+<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="10"/>
+
+<button type="button" class="btn btn-outline-inverse btn-lg" id="clear-button">
+clear <span class="glyphicon glyphicon-remove"></span>
+</button>
+<button type="button" class="btn btn-outline-inverse btn-lg" id="play-button">
+<span id="run-text">run</span> <span class="glyphicon glyphicon-play" id="play-icon"></span>
+</button>
+
 </div>
 </div>
 </body>
