@@ -12,26 +12,6 @@ function timeStamp() {
 
 $(document).ready(function () {
 
-    worker = new Worker("testspeed.js");
-    var speeds = [];
-    var time = timeStamp();
-    function handleMessage(e) {
-        if (speeds.length < 10000) {
-            var now = timeStamp();
-            speeds.push(now - time);
-            time = now;
-        }
-        else {
-            var avg = 0;
-            for (var i = 0; i < speeds.length; i++) {
-                avg += speeds[i];
-            }
-            console.log(avg/speeds.length)
-        }
-        worker.postMessage("test");
-    };
-    worker.addEventListener("message", handleMessage);
-
     handleMessage();
 
     var time = timeStamp();
@@ -39,6 +19,9 @@ $(document).ready(function () {
     self.addEventListener()
 
     codeRunner = new CodeRunner();
+    codeRunner.addFunction('setup',function() {
+        self.
+    });
     //runner.setupWorker({gridWidth:10,gridHeight:10,func:function() {console.log("yay!!!");}});
 
     codeMirror = CodeMirror.fromTextArea($("#codemirror-textbox")[0],{
@@ -124,7 +107,7 @@ $(document).ready(function () {
 
     counter = 0;
 
-    runLoop();
+    window.requestAnimationFrame(runLoop);
 });
 
 
@@ -164,8 +147,6 @@ function countNeighbors(pos) {
 
 
 function runLoop() {
-    window.requestAnimationFrame(runLoop);
-    if (running) {
         for (var i = 0; i < 1; i++) {
             /*newdata = [];
             for (var x = 0; x < grid.gridWidth; x++) {
@@ -192,4 +173,6 @@ function runLoop() {
     context.clearRect(0,0,canvas.width,canvas.height);
     grid.draw(context,data);
     counter = 0;
+    if (running)
+        window.requestAnimationFrame(runLoop);
 }
