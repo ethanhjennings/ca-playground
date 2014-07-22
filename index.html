@@ -95,6 +95,8 @@
 <script src="codemirror/addon/selection/active-line.js"></script>
 <script src="codemirror/addon/edit/matchbrackets.js"></script>
 <script src="grid.js"></script>
+<script src="coderunner.js"></script>
+<script src="coderunner-worker.js"></script>
 <script src="draw.js"></script>
 
 </head>
@@ -102,15 +104,15 @@
 <div id="center-div">
 <canvas id="main-canvas"></canvas>
 <textarea id="codemirror-textbox">
-init = 0;
-
-run = function(state,neighbors) {
-    return state;
-};
-
-color = function(state) {
-    return (state == 1 ? "white" : rbga(0,0,0,0) );
-};
+{
+    init: 0,
+    run: function() {
+      return "transparent";
+    },
+    color: function() {
+      return "transparent";
+    }
+}
 </textarea>
 <button type="button" class="btn btn-outline-inverse btn-lg" id="plus-button">
 <span class="glyphicon glyphicon-plus"></span>
