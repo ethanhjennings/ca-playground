@@ -1,88 +1,76 @@
-function timeStamp() {
-    return +(new Date());
-}
-
-running = false;
-var codeMirror;
-var codeRunner;
-
-function timeStamp() {
-    return Date.now();
-}
+var self = this;
 
 $(document).ready(function () {
 
-    handleMessage();
-
-    var time = timeStamp();
-
-    self.addEventListener()
-
-    codeRunner = new CodeRunner();
-    codeRunner.addFunction('setup',function() {
-        self.
-    });
-    //runner.setupWorker({gridWidth:10,gridHeight:10,func:function() {console.log("yay!!!");}});
-
-    codeMirror = CodeMirror.fromTextArea($("#codemirror-textbox")[0],{
+    self.codeMirror = CodeMirror.fromTextArea($("#codemirror-textbox")[0],{
         mode:  "javascript",
         theme: "glass",
         lineNumbers: true,
         indentUnit: 4
     });
 
-    codeRunner.setCode(codeMirror.getValue());
-
-    codeMirror.on("change",function(instance, changeObj) {
-        codeRunner.setCode(codeMirror.getValue());
+    self.codeMirror.on("change",function(instance, changeObj) {
+        self.cellProcessor.setCode(codeMirror.getValue());
     });
+
+    self.canvas = $("#main-canvas")[0];
+    self.context = self.canvas.getContext("2d");
+
+    self.context.canvas.width = $("#main-canvas").width();
+    self.context.canvas.height = $("#main-canvas").height();
+
+    self.width = self.context.canvas.width;
+    self.height = self.context.canvas.height;
+
+
+    self.code = self.codeMirror.getValue();
+    self.grid = new Grid(self.width,self.height,10);
+
+    self.gridModified = false;
+
+    self.cellProcessor = new CellProcessor();
+    self.cellProcessor.setCode(self.codeMirror.getValue());
+    self.cellProcessor.onStep(cellsChanged);
+    self.cellProcessor.init(self.grid.gridWidth,self.grid.gridHeight);
+    self.cellProcessor.onDrawOptions(function (drawOptions) {
+        self.drawOptions = drawOptions;
+    });
+    /*self.cellProcessor.onError(function (error,linenum) {
+        alert("error! " + error);
+    });*/
 
     $('#ex1').slider();
 
-    running = false;
+    self.running = false;
 
     $("#play-button").click(function () {
 
-        running = !running;
+        self.running = !self.running;
 
         $("#play-icon").removeClass();
-        if (running) {
+        if (self.running) {
+            self.cellProcessor.requestNewStep(this.cells,cellsChanged);
             console.log("Running!");
             $("#play-icon").addClass("glyphicon glyphicon-pause");
             $("#run-text").text("Pause");
         }
         else {
+
             console.log("Paused !");
             $("#play-icon").addClass("glyphicon glyphicon-play");
             $("#run-text").text("Run");
         }
     });
-
-    canvas = $("#main-canvas")[0];
-    context = canvas.getContext("2d");
-
-    context.canvas.width = $("#main-canvas").width();
-    context.canvas.height = $("#main-canvas").height();
-
-    width = context.canvas.width;
-    height = context.canvas.height;
-
-    grid = new Grid(width,height,10);
-    data = [];
-    for (var x = 0; x < grid.gridWidth; x++) {
-        data.push([]);
-        for (var y = 0; y < grid.gridHeight; y++) {
-            data[x].push();
-        }
-    }
-    var lastMousePos;
+    
 
     function getXY(event) {
-        return {x:event.clientX-canvas.offsetLeft-3, 
-                y:event.clientY-canvas.offsetTop+5};
+        return {x:event.clientX-self.canvas.offsetLeft-3, 
+                y:event.clientY-self.canvas.offsetTop+5};
     }
+
+    var lastMousePos;
     var mouseDown = false;
-    $(canvas).mousedown(function(event) {
+    $(self.canvas).mousedown(function(event) {
         mouseDown = true;
         lastMousePos = getXY(event);
     });
@@ -91,9 +79,12 @@ $(document).ready(function () {
         if (mouseDown) {
             var newPoints = grid.convertLineToGridPoints(lastMousePos,getXY(mousemoveEvent));
             $.each(newPoints, function(i,point) {
-                data[point.x][point.y] = "white";
+                this.cells[point.x][point.y] = this.drawOptions[0].state;
+                this.colors[point.x][point.y] = this.drawOptions[0].color;
             });
             lastMousePos = getXY(mousemoveEvent);
+
+            this.gridModified = true;
         }
     });
 
@@ -103,11 +94,9 @@ $(document).ready(function () {
     });
 
     // makes the lines crisper
-    context.translate(-0.5,-0.5);
+    self.context.translate(-0.5,-0.5);
 
-    counter = 0;
-
-    window.requestAnimationFrame(runLoop);
+    //window.requestAnimationFrame(draw);
 });
 
 
@@ -144,35 +133,21 @@ function countNeighbors(pos) {
     return neighborCount;
 }
 
+function cellsChanged(newCells,newColors) {
+    if (!this.gridModified) {
+        self.colors = newColors;
+        this.cells = newCells;
+        invalidateCells();
+    }
+    self.gridModified = false;
+    self.cellProcessor.requestNewStep(this.cells,cellsChanged);
+}
 
+function invalidateCells() {
+    window.requestAnimationFrame(draw);
+}
 
-function runLoop() {
-        for (var i = 0; i < 1; i++) {
-            /*newdata = [];
-            for (var x = 0; x < grid.gridWidth; x++) {
-                newdata.push([]);
-                for (var y = 0; y < grid.gridHeight; y++) {
-                    newdata[x].push(0);
-                    //codeRunner.runFunc('run',function(state) {
-                    //    newdata[x][y] = state;
-                    //});
-                    /*var count = countNeighbors({x:x,y:y});
-                    if (count == 3)
-                        newdata[x].push("white");
-                    else if (count < 2)
-                        newdata[x].push("rgba(0,0,0,0.0)");
-                    else if (count > 3)
-                        newdata[x].push("rgba(0,0,0,0.0)");
-                    else
-                        newdata[x].push(data[x][y]);
-                }
-            }
-            data = newdata;*/
-        }
-    }          
-    context.clearRect(0,0,canvas.width,canvas.height);
-    grid.draw(context,data);
-    counter = 0;
-    if (running)
-        window.requestAnimationFrame(runLoop);
+function draw() {
+    self.context.clearRect(0,0,self.canvas.width,self.canvas.height);
+    self.grid.draw(self.context,self.colors);
 }

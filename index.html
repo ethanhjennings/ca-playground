@@ -94,9 +94,11 @@
 <script src="codemirror/mode/javascript/javascript.js"></script>
 <script src="codemirror/addon/selection/active-line.js"></script>
 <script src="codemirror/addon/edit/matchbrackets.js"></script>
-<script src="grid.js"></script>
+<script src="helper.js"></script>
 <script src="coderunner.js"></script>
 <script src="coderunner-worker.js"></script>
+<script src="cellprocessor.js"></script>
+<script src="grid.js"></script>
 <script src="draw.js"></script>
 
 </head>
@@ -105,10 +107,14 @@
 <canvas id="main-canvas"></canvas>
 <textarea id="codemirror-textbox">
 {
-    init: 0,
+    init: "DEAD",
+
+    drawOptions: ["ALIVE"],
+
     run: function() {
-      return "transparent";
+      return "DEAD";
     },
+
     color: function() {
       return "transparent";
     }
